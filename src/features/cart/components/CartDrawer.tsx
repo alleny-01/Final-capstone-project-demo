@@ -23,7 +23,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   if (items.length === 0) {
     return (
       <Drawer open={open} onClose={onClose} title="Shopping Cart">
-        <div className="p-6 text-center">
+        <div className="p-6 text-center bg-white">
           <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
             Your cart is empty
@@ -40,13 +40,13 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   return (
     <Drawer open={open} onClose={onClose} title="Shopping Cart">
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b">
+        <div className="p-4 border-b bg-white">
           <p className="text-sm text-gray-600">
             {items.length} {items.length === 1 ? "item" : "items"}
           </p>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 bg-white">
           <div className="space-y-4">
             {items.map((item) => (
               <CartItem key={item.product.id} item={item} />
