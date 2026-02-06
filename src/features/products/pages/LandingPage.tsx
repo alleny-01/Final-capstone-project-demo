@@ -18,11 +18,11 @@ export default function LandingPage() {
             </p>
             <Link to="/products">
               <Button
-                size="lg"
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-6 text-lg h-auto"
+                size="md"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold"
               >
                 Start Shopping
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
           </div>
@@ -83,11 +83,11 @@ export default function LandingPage() {
             </p>
             <Link to="/products">
               <Button
-                size="lg"
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-6 text-lg h-auto"
+                size="md"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold"
               >
                 View All Products
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
           </div>

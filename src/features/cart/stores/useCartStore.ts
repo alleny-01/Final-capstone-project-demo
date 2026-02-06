@@ -10,12 +10,17 @@ export const useCartStore = create<CartState>()(
 
       addItem: (product: Product) =>
         set((state) => {
+          // Don't add if out of stock
+          if (product.quantity === 0) {
+            return state;
+          }
+
           const existingItem = state.items.find(
             (item) => item.product.id === product.id,
           );
 
           if (existingItem) {
-            if (existingItem.quantity >= product.stock) {
+            if (existingItem.quantity >= product.quantity) {
               return state;
             }
             return {
@@ -51,7 +56,7 @@ export const useCartStore = create<CartState>()(
           return {
             items: state.items.map((item) => {
               if (item.product.id === productId) {
-                const newQuantity = Math.min(quantity, item.product.stock);
+                const newQuantity = Math.min(quantity, item.product.quantity);
                 return { ...item, quantity: newQuantity };
               }
               return item;

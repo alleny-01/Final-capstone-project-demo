@@ -14,8 +14,11 @@ export default function CartItem({ item }: CartItemProps) {
   const subtotal = item.product.price * item.quantity;
 
   const handleIncrement = () => {
-    if (item.quantity < item.product.stock) {
-      updateQuantity(item.product.id, item.quantity + 1);
+    const newQuantity = item.quantity + 1;
+    if (newQuantity <= item.product.quantity) {
+      updateQuantity(item.product.id, newQuantity);
+    } else {
+      toast.error("Maximum stock reached");
     }
   };
 
@@ -71,7 +74,7 @@ export default function CartItem({ item }: CartItemProps) {
             variant="outline"
             size="sm"
             onClick={handleIncrement}
-            disabled={item.quantity >= item.product.stock}
+            disabled={item.quantity >= item.product.quantity}
             className="h-8 w-8 p-0"
           >
             <Plus className="w-4 h-4" />
