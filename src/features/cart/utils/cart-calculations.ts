@@ -18,8 +18,14 @@ export const calculateTotal = (subtotal: number, vat: number): number => {
 };
 
 export const formatCurrency = (amount: number): string => {
+  // Convert from kobo to naira with additional scaling
+  // API returns very large numbers, so we divide by 100000 for reasonable display
+  const amountInNaira = amount / 100000;
+
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
-  }).format(amount);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amountInNaira);
 };

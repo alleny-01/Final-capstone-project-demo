@@ -8,7 +8,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     return config;
@@ -18,17 +17,14 @@ axiosInstance.interceptors.request.use(
   },
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     if (error.response) {
-      // Server responded with error status
       console.error("API Error:", error.response.data);
     } else if (error.request) {
-      // Request made but no response
       console.error("Network Error:", error.message);
     } else {
       console.error("Error:", error.message);

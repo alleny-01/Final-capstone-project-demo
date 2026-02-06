@@ -1,8 +1,14 @@
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select-new";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, X } from "lucide-react";
+import { Search, X, Filter } from "lucide-react";
 
 interface ProductFiltersProps {
   search: string;
@@ -28,36 +34,47 @@ export default function ProductFilters({
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Search Input */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             type="text"
             placeholder="Search products..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
+            className="pl-10 h-11"
           />
         </div>
 
         {/* Category Filter */}
         <Select
           value={category || "all"}
-          onChange={(e) =>
-            onCategoryChange(e.target.value === "all" ? null : e.target.value)
-          }
-          className="w-full sm:w-48"
+          onValueChange={(val) => onCategoryChange(val === "all" ? null : val)}
         >
-          <option value="all">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
+          <SelectTrigger className="w-full sm:w-56 h-11">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4" />
+              <SelectValue placeholder="All Categories" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
 
         {/* Clear Filters Button */}
         {hasFilters && (
-          <Button variant="outline" onClick={onClearFilters} size="md">
-            Clear Filters
+          <Button
+            variant="outline"
+            onClick={onClearFilters}
+            size="lg"
+            className="h-11"
+          >
+            <X className="w-4 h-4 mr-2" />
+            Clear
           </Button>
         )}
       </div>
@@ -66,22 +83,30 @@ export default function ProductFilters({
       {hasFilters && (
         <div className="flex flex-wrap gap-2">
           {search && (
-            <Badge variant="default" className="flex items-center gap-1">
-              Search: {search}
+            <Badge
+              variant="default"
+              className="flex items-center gap-1.5 px-3 py-1.5"
+            >
+              <span className="text-xs">Search:</span>
+              <span className="font-medium">{search}</span>
               <button
                 onClick={() => onSearchChange("")}
-                className="ml-1 hover:bg-black/10 rounded-full p-0.5"
+                className="ml-1 hover:bg-black/10 rounded-full p-0.5 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
             </Badge>
           )}
           {category && (
-            <Badge variant="default" className="flex items-center gap-1">
-              Category: {category}
+            <Badge
+              variant="default"
+              className="flex items-center gap-1.5 px-3 py-1.5"
+            >
+              <span className="text-xs">Category:</span>
+              <span className="font-medium">{category}</span>
               <button
                 onClick={() => onCategoryChange(null)}
-                className="ml-1 hover:bg-black/10 rounded-full p-0.5"
+                className="ml-1 hover:bg-black/10 rounded-full p-0.5 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>

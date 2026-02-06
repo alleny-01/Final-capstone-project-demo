@@ -1,4 +1,3 @@
-// Import Zustand for state management and cart types
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { type CartState } from "../types/cart.types";
@@ -16,7 +15,6 @@ export const useCartStore = create<CartState>()(
           );
 
           if (existingItem) {
-            // Check stock limit
             if (existingItem.quantity >= product.stock) {
               return state;
             }
@@ -53,7 +51,6 @@ export const useCartStore = create<CartState>()(
           return {
             items: state.items.map((item) => {
               if (item.product.id === productId) {
-                // Check stock limit
                 const newQuantity = Math.min(quantity, item.product.stock);
                 return { ...item, quantity: newQuantity };
               }

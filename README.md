@@ -1,73 +1,216 @@
-# React + TypeScript + Vite
+# QuickServe E-commerce
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich e-commerce application built with React, TypeScript, and Vite. Features a clean product catalog, shopping cart, and integrated Paystack payment processing.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Product Catalog**: Browse products with filtering, search, and pagination
+- **Shopping Cart**: Add/remove items with persistent state management
+- **Checkout Flow**: Seamless checkout with Paystack payment integration
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **Type-Safe**: Full TypeScript support throughout the application
+- **State Management**: Zustand for cart state, React Query for server state
+- **URL-Synced Filters**: Filter state persists in URL query parameters
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS 4
+- **Routing**: React Router v7
+- **State Management**:
+  - Zustand (client state)
+  - TanStack Query (server state)
+- **Forms**: React Hook Form + Zod validation
+- **Payment**: Paystack
+- **UI Components**: Custom components with Radix UI primitives
+- **HTTP Client**: Axios
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+quickserve-ecommerce/
+├── src/
+│   ├── app/                    # App configuration
+│   │   ├── providers/         # Global providers
+│   │   └── router/            # Route definitions
+│   ├── features/              # Feature modules
+│   │   ├── products/          # Product catalog
+│   │   ├── cart/              # Shopping cart
+│   │   └── checkout/          # Checkout & payment
+│   ├── components/            # Shared components
+│   │   ├── layout/           # Layout components
+│   │   └── ui/               # UI primitives
+│   ├── lib/                   # Utilities & config
+│   │   ├── axios.ts          # API client
+│   │   ├── react-query.ts    # Query config
+│   │   └── constants/        # App constants
+│   └── hooks/                 # Global hooks
+├── public/                    # Static assets
+└── [config files]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+ and npm/yarn
+- Paystack account for payment processing
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd quickserve-ecommerce
 ```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env
+```
+
+4. Add your Paystack public key to `.env`:
+
+```env
+VITE_PAYSTACK_PUBLIC_KEY=pk_test_xxxxxxxxxxxxx
+```
+
+Get your key from [Paystack Dashboard](https://dashboard.paystack.com/#/settings/developer)
+
+### Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+### Build
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview production build:
+
+```bash
+npm run preview
+```
+
+### Linting
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+## Features Overview
+
+### Products Feature
+
+Browse and filter products with:
+
+- Category filtering
+- Search functionality
+- Price range filtering
+- Server-side pagination
+- URL-synced filter state
+- Loading skeletons
+
+See [Products README](src/features/products/README.md) for details.
+
+### Cart Feature
+
+Shopping cart with:
+
+- Add/remove items
+- Quantity management
+- Real-time price calculations
+- Persistent storage (localStorage)
+- Cart drawer UI
+
+See [Cart README](src/features/cart/README.md) for details.
+
+### Checkout Feature
+
+Complete checkout flow with:
+
+- Customer information form
+- Order summary
+- Paystack payment integration
+- Order confirmation page
+- Form validation with Zod
+
+## Routes
+
+- `/` - Landing page with featured products
+- `/products` - Full product catalog with filters
+- `/checkout` - Checkout and payment
+- `/confirmation` - Order confirmation
+
+## Key Dependencies
+
+| Package                    | Purpose                 |
+| -------------------------- | ----------------------- |
+| `react`                    | UI framework            |
+| `react-router-dom`         | Routing                 |
+| `@tanstack/react-query`    | Server state management |
+| `zustand`                  | Client state management |
+| `axios`                    | HTTP client             |
+| `react-hook-form`          | Form handling           |
+| `zod`                      | Schema validation       |
+| `react-paystack`           | Payment integration     |
+| `nuqs`                     | URL state management    |
+| `@rc-component/pagination` | Pagination component    |
+| `lucide-react`             | Icons                   |
+| `tailwindcss`              | Styling                 |
+
+## Environment Variables
+
+| Variable                   | Description             | Required |
+| -------------------------- | ----------------------- | -------- |
+| `VITE_PAYSTACK_PUBLIC_KEY` | Paystack public API key | Yes      |
+
+## Architecture Patterns
+
+### Feature-Based Structure
+
+Each feature is self-contained with its own components, hooks, types, and API functions.
+
+### URL-Synced Filters
+
+Filter state is synchronized with URL query parameters using `nuqs`, enabling shareable filtered views.
+
+### Type Safety
+
+Full TypeScript coverage with strict type checking and Zod schema validation.
+
+### Component Composition
+
+Reusable UI components built with Radix UI primitives and styled with Tailwind CSS.
+
+## Contributing
+
+1. Follow the existing folder structure and naming conventions
+2. Use TypeScript for all new files
+3. Add proper type definitions
+4. Follow the component patterns in existing features
+5. Run linting before committing
+
+## License
+
+This project is private and not licensed for public use.

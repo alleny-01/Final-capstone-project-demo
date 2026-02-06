@@ -2,7 +2,7 @@ import { type CartItem as CartItemType } from "../types/cart.types";
 import { useCartStore } from "../stores/useCartStore";
 import { formatCurrency } from "../utils/cart-calculations";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, ImageOff } from "lucide-react";
 
 interface CartItemProps {
   item: CartItemType;
@@ -30,13 +30,24 @@ export default function CartItem({ item }: CartItemProps) {
     }
   };
 
+  const isPlaceholderImage =
+    !item.product.image ||
+    item.product.image === "https://placehold.net/default.png" ||
+    item.product.image.includes("placehold");
+
   return (
     <div className="flex gap-4 py-4 border-b">
-      <img
-        src={item.product.image}
-        alt={item.product.name}
-        className="w-20 h-20 object-cover rounded"
-      />
+      {isPlaceholderImage ? (
+        <div className="w-20 h-20 rounded bg-gray-100 flex items-center justify-center shrink-0">
+          <ImageOff className="w-8 h-8 text-gray-300" />
+        </div>
+      ) : (
+        <img
+          src={item.product.image}
+          alt={item.product.name}
+          className="w-20 h-20 object-cover rounded shrink-0"
+        />
+      )}
       <div className="flex-1">
         <h4 className="font-semibold text-sm mb-1">{item.product.name}</h4>
         <p className="text-sm text-gray-600 mb-2">

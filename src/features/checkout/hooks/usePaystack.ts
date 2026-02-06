@@ -1,4 +1,3 @@
-// Import necessary dependencies for Paystack payment integration
 import { usePaystackPayment } from "react-paystack";
 import { useCartStore } from "@/features/cart/stores/useCartStore";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +6,6 @@ import { useState } from "react";
 
 const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
-// Define the structure of Paystack payment response
 interface PaystackReference {
   reference: string;
   trans?: string;
@@ -17,7 +15,6 @@ interface PaystackReference {
   trxref?: string;
 }
 
-// Custom hook for handling Paystack payment integration
 export function usePaystack() {
   const { getTotal, clearCart, items } = useCartStore();
   const navigate = useNavigate();
@@ -29,7 +26,6 @@ export function usePaystack() {
   });
 
   const onSuccess = (reference: PaystackReference) => {
-    // Create order details for confirmation page
     const orderDetails = {
       reference: reference.reference,
       email: paymentConfig.email,
@@ -45,10 +41,8 @@ export function usePaystack() {
       total: getTotal(),
     };
 
-    // Clear cart
     clearCart();
 
-    // Navigate to confirmation page with order details
     navigate("/confirmation", {
       state: { orderDetails },
     });

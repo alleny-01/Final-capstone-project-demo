@@ -1,36 +1,45 @@
-import { useState, useMemo } from "react";
-import { type Product } from "../types/product.types";
-import { useDebounce } from "@/hooks/useDebounce";
+"use client";
 
-export const useProductFilters = () => {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-  const debouncedSearch = useDebounce(search, 300);
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 
-  const filterProducts = useMemo(() => {
-    return (products: Product[]) => {
-      return products.filter((product) => {
-        const matchesSearch = product.name
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase());
-        const matchesCategory = !category || product.category === category;
-        return matchesSearch && matchesCategory;
-      });
-    };
-  }, [debouncedSearch, category]);
+export function useProductFilters() {
+  const [filters, setFilters] = useQueryStates(
+    {
+      page: parseAsInteger.withDefault(1),
+      limit: parseAsInteger.withDefault(10),
+      search: parseAsString.withDefault(""),
+      category: parseAsString,
+    },
+    { history: "push", shallow: false },
+  );
 
-  const clearFilters = () => {
-    setSearch("");
-    setCategory(null);
-  };
+  const setPage = (page: number) => setFilters({ page });
+  const setLimit = (limit: number) => setFilters({ limit, page: 1 });
+  const setSearch = (search: string) => setFilters({ search, page: 1 });
+  const setCategory = (category: string | null) =>
+    setFilters({ category, page: 1 });
+
+  const clearFilters = () =>
+    setFilters({
+      page: 1,
+      search: "",
+      category: null,
+    });
+
+  const hasFilters = !!(filters.search || filters.category);
 
   return {
-    search,
+    filters: {
+      page: filters.page,
+      limit: filters.limit,
+      search: filters.search,
+      category: filters.category,
+    },
+    setPage,
+    setLimit,
     setSearch,
-    category,
     setCategory,
-    filterProducts,
     clearFilters,
-    hasFilters: !!search || !!category,
+    hasFilters,
   };
-};
+}
