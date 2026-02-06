@@ -3,6 +3,7 @@ import { useCartStore } from "../stores/useCartStore";
 import { formatCurrency } from "../utils/cart-calculations";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2, ImageOff } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface CartItemProps {
   item: CartItemType;
@@ -25,9 +26,8 @@ export default function CartItem({ item }: CartItemProps) {
   };
 
   const handleRemove = () => {
-    if (confirm(`Remove ${item.product.name} from cart?`)) {
-      removeItem(item.product.id);
-    }
+    removeItem(item.product.id);
+    toast.success(`${item.product.name} removed from cart`);
   };
 
   const isPlaceholderImage =

@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 import {
   checkoutSchema,
   type CheckoutFormData,
@@ -23,7 +24,7 @@ export default function CheckoutForm() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     if (!isPaystackConfigured) {
-      alert("Payment system is not configured. Please contact support.");
+      toast.error("Payment system is not configured. Please contact support.");
       return;
     }
 
