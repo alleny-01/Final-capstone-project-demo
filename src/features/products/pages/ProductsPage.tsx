@@ -1,30 +1,16 @@
-import { useMemo } from "react";
 import { useProducts } from "../hooks/useProducts";
-import { useProductFilters } from "../hooks/useProductFilters";
 import ProductFilters from "../components/ProductFilters";
 import ProductGrid from "../components/ProductGrid";
 import ProductSkeleton from "../components/ProductSkeleton";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AntPagination } from "@/components/ui/pagination";
+import { useMemo, useState } from "react";
 
 export default function ProductsPage() {
-  const {
-    filters,
-    setPage,
-    setLimit,
-    setSearch,
-    setCategory,
-    clearFilters,
-    hasFilters,
-  } = useProductFilters();
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<string | null>(null);
 
-  const { data, isLoading, isError, error, refetch } = useProducts({
-    page: filters.page,
-    limit: filters.limit,
-    search: filters.search,
-    category: filters.category,
-  });
+  const { data, isLoading, isError, error, refetch } = useProducts();
 
   const categories = useMemo(() => {
     if (!data?.data) return [];
@@ -33,6 +19,28 @@ export default function ProductsPage() {
     );
     return uniqueCategories as string[];
   }, [data]);
+
+  const filteredProducts = useMemo(() => {
+    if (!data?.data) return [];
+
+    return data.data.filter((product) => {
+      const matchesSearch = search
+        ? product.name.toLowerCase().includes(search.toLowerCase()) ||
+          product.description?.toLowerCase().includes(search.toLowerCase())
+        : true;
+
+      const matchesCategory = category ? product.category === category : true;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [data, search, category]);
+
+  const clearFilters = () => {
+    setSearch("");
+    setCategory(null);
+  };
+
+  const hasFilters = !!(search || category);
 
   if (isError) {
     return (
@@ -67,7 +75,7 @@ export default function ProductsPage() {
           <p className="text-base md:text-lg text-gray-600 max-w-2xl">
             Explore our curated collection of{" "}
             <span className="font-semibold text-red-600">
-              {data?.meta?.total || 0} premium products
+              {filteredProducts.length} premium products
             </span>
             . Find exactly what you're looking for.
           </p>
@@ -76,9 +84,9 @@ export default function ProductsPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in-up animate-delay-100">
         <ProductFilters
-          search={filters.search}
+          search={search}
           onSearchChange={setSearch}
-          category={filters.category}
+          category={category}
           onCategoryChange={setCategory}
           categories={categories}
           onClearFilters={clearFilters}
@@ -88,31 +96,12 @@ export default function ProductsPage() {
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Array.from({ length: filters.limit }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <ProductSkeleton key={i} />
           ))}
         </div>
       ) : (
-        <>
-          <ProductGrid products={data?.data || []} />
-
-          {data?.meta && data.meta.total > 0 && (
-            <div className="flex justify-center items-center py-6 bg-white rounded-xl shadow-sm border border-gray-200">
-              <AntPagination
-                current={filters.page}
-                pageSize={filters.limit}
-                total={data.meta.total}
-                onChange={setPage}
-                onShowSizeChange={(_, size) => setLimit(size)}
-                showSizeChanger
-                pageSizeOptions={[10, 20, 50, 100]}
-                showTotal={(total, range) =>
-                  `${range[0]}-${range[1]} of ${total} products`
-                }
-              />
-            </div>
-          )}
-        </>
+        <ProductGrid products={filteredProducts} />
       )}
     </div>
   );
