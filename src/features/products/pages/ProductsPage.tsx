@@ -15,8 +15,13 @@ export default function ProductsPage() {
   const categories = useMemo(() => {
     if (!data?.data) return [];
     const uniqueCategories = Array.from(
-      new Set(data.data.map((p) => p.category).filter(Boolean)),
-    );
+      new Set(
+        data.data
+          .map((p) => p.category)
+          .filter(Boolean)
+          .map((cat) => cat!.trim().toLowerCase()),
+      ),
+    ).map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1));
     return uniqueCategories as string[];
   }, [data]);
 
@@ -29,7 +34,9 @@ export default function ProductsPage() {
           product.description?.toLowerCase().includes(search.toLowerCase())
         : true;
 
-      const matchesCategory = category ? product.category === category : true;
+      const matchesCategory = category
+        ? product.category?.trim().toLowerCase() === category.toLowerCase()
+        : true;
 
       return matchesSearch && matchesCategory;
     });
