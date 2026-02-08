@@ -33,23 +33,39 @@ export default function CartItem({ item }: CartItemProps) {
     toast.success(`${item.product.name} removed from cart`);
   };
 
-  const isPlaceholderImage =
-    !item.product.image ||
-    item.product.image === "https://placehold.net/default.png" ||
-    item.product.image.includes("placehold");
+  const getProductImage = (images: string): string | null => {
+    try {
+      const parsed = JSON.parse(images);
+      if (
+        Array.isArray(parsed) &&
+        parsed.length > 0 &&
+        parsed[0] !== "https://placehold.net/default.png"
+      ) {
+        return parsed[0];
+      }
+      return null;
+    } catch {
+      if (images && images !== "https://placehold.net/default.png") {
+        return images;
+      }
+      return null;
+    }
+  };
+
+  const imageUrl = getProductImage(item.product.images);
 
   return (
     <div className="flex gap-4 py-4 border-b">
-      {isPlaceholderImage ? (
-        <div className="w-20 h-20 rounded bg-gray-100 flex items-center justify-center shrink-0">
-          <ImageOff className="w-8 h-8 text-gray-300" />
-        </div>
-      ) : (
+      {imageUrl ? (
         <img
-          src={item.product.image}
+          src={imageUrl}
           alt={item.product.name}
           className="w-20 h-20 object-cover rounded shrink-0"
         />
+      ) : (
+        <div className="w-20 h-20 rounded bg-gray-100 flex items-center justify-center shrink-0">
+          <ImageOff className="w-8 h-8 text-gray-300" />
+        </div>
       )}
       <div className="flex-1">
         <h4 className="font-semibold text-sm mb-1">{item.product.name}</h4>
