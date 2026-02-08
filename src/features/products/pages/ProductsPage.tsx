@@ -1,53 +1,17 @@
 import { useProducts } from "../hooks/useProducts";
-import ProductFilters from "../components/ProductFilters";
 import ProductGrid from "../components/ProductGrid";
 import ProductSkeleton from "../components/ProductSkeleton";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export default function ProductsPage() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-
   const { data, isLoading, isError, error, refetch } = useProducts();
 
-  const categories = useMemo(() => {
+  const displayProducts = useMemo(() => {
     if (!data?.data) return [];
-    const uniqueCategories = Array.from(
-      new Set(
-        data.data
-          .map((p) => p.category)
-          .filter(Boolean)
-          .map((cat) => cat!.trim().toLowerCase()),
-      ),
-    ).map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1));
-    return uniqueCategories as string[];
+    return data.data.slice(0, 10);
   }, [data]);
-
-  const filteredProducts = useMemo(() => {
-    if (!data?.data) return [];
-
-    return data.data.filter((product) => {
-      const matchesSearch = search
-        ? product.name.toLowerCase().includes(search.toLowerCase()) ||
-          product.description?.toLowerCase().includes(search.toLowerCase())
-        : true;
-
-      const matchesCategory = category
-        ? product.category?.trim().toLowerCase() === category.toLowerCase()
-        : true;
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [data, search, category]);
-
-  const clearFilters = () => {
-    setSearch("");
-    setCategory(null);
-  };
-
-  const hasFilters = !!(search || category);
 
   if (isError) {
     return (
@@ -82,23 +46,11 @@ export default function ProductsPage() {
           <p className="text-base md:text-lg text-gray-600 max-w-2xl">
             Explore our curated collection of{" "}
             <span className="font-semibold text-red-600">
-              {filteredProducts.length} premium products
+              {displayProducts.length} premium products
             </span>
             . Find exactly what you're looking for.
           </p>
         </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in-up animate-delay-100">
-        <ProductFilters
-          search={search}
-          onSearchChange={setSearch}
-          category={category}
-          onCategoryChange={setCategory}
-          categories={categories}
-          onClearFilters={clearFilters}
-          hasFilters={hasFilters}
-        />
       </div>
 
       {isLoading ? (
@@ -108,7 +60,7 @@ export default function ProductsPage() {
           ))}
         </div>
       ) : (
-        <ProductGrid products={filteredProducts} />
+        <ProductGrid products={displayProducts} />
       )}
     </div>
   );
